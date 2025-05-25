@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet"
 import { Heart, Menu, Home, Activity, History, Info, Sparkles, LogIn } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { SignedOut, SignInButton } from "@clerk/nextjs"
+import { SignedIn, UserButton } from "@clerk/clerk-react"
 
 const navigation = [
 	{ name: "Home", href: "/", icon: Home },
@@ -84,9 +86,18 @@ export function Navigation() {
 						{/* Sign In Button for Mobile (far right of this group) */}
 						<div className="ml-auto">
 							{/* Use ml-auto to push it to the right */}
-							<Button variant="outline" size="sm" className="flex items-center">
+							
+							<SignedOut>
+								<SignInButton mode="modal">
+									<Button variant="outline" size="sm" className="flex items-center">
 								<span>Sign In</span> {/* Text only, removed responsive classes for icon */}
 							</Button>
+
+								</SignInButton>
+							</SignedOut>
+							<SignedIn>
+								<UserButton />
+							</SignedIn>
 						</div>
 					</div>
 
@@ -127,9 +138,16 @@ export function Navigation() {
 					</nav>
 					{/* Desktop Sign In Button */}
 					<div className="hidden md:flex items-center">
-						<Button variant="outline" size="sm" className="flex items-center">
-							<LogIn className="mr-2 h-4 w-4" /> Sign In
-						</Button>
+						<SignedOut>
+							<SignInButton mode="modal">
+								<Button variant="outline" size="sm" className="ml-4">
+									<LogIn className="mr-2 h-4 w-4" /> Sign In
+								</Button>
+							</SignInButton>
+						</SignedOut>
+						<SignedIn>
+							<UserButton />
+						</SignedIn>
 					</div>
 				</div>
 			</div>
