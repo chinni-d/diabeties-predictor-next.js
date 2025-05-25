@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Heart, Brain, Shield, Users, Award, Mail, Github, Linkedin } from "lucide-react"
+import { Heart, Brain, Shield, User, Award, Mail, Github, Linkedin } from "lucide-react"
 
 export default function AboutPage() {
   return (
@@ -75,7 +75,7 @@ export default function AboutPage() {
           <Card className="border-blue-200 shadow-lg">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-blue-900">
-                <Users className="w-6 h-6 text-blue-600" />
+                <User className="w-6 h-6 text-blue-600" />
                 Evidence-Based Recommendations
               </CardTitle>
             </CardHeader>
@@ -107,11 +107,11 @@ export default function AboutPage() {
         <Card className="border-blue-200 shadow-lg mb-8">
           <CardHeader className="bg-blue-600 text-white rounded-t-lg">
             <CardTitle className="flex items-center gap-2">
-              <Users className="w-6 h-6" />
+              <User className="w-6 h-6" />
               Meet the Developer
             </CardTitle>
             <CardDescription className="text-blue-100">
-              The team behind DiabetesAI's innovative health technology
+              The developer behind DiabetesAI's innovative health technology
             </CardDescription>
           </CardHeader>
           <CardContent className="p-8">
