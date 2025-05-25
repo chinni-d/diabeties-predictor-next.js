@@ -36,7 +36,7 @@ export function Navigation() {
 									<Menu className="h-6 w-6" />
 								</Button>
 							</SheetTrigger>
-							<SheetContent side="left" className="w-80 bg-gradient-to-b from-white to-blue-50">
+							<SheetContent side="left" className="w-60 bg-gradient-to-b from-white to-blue-50"> {/* Reduced width to w-72 */}
 								<SheetTitle className="sr-only">Navigation Menu</SheetTitle>
 								<div className="flex items-center space-x-3 mb-8">
 									<Heart className="h-8 w-8 text-blue-600" />
@@ -58,7 +58,7 @@ export function Navigation() {
 												className={cn(
 													"flex items-center space-x-3 px-4 py-4 rounded-xl text-sm font-medium transition-all duration-300",
 													isActive
-														? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg"
+														? "bg-blue-600 text-white shadow-md" // Changed active status color and shadow
 														: "text-blue-700 hover:bg-blue-100 hover:text-blue-900",
 												)}
 											>
