@@ -111,7 +111,7 @@ export default function PredictPage() {
                 AI Health Assessment
               </h1>
             </div>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base text-slate-600 max-w-3xl mx-auto leading-relaxed">
               Provide accurate health information for the most reliable AI-powered diabetes risk prediction. All data is
               encrypted and processed securely.
             </p>
