@@ -19,7 +19,7 @@ interface PredictionHistory {
     age: string
   }
   result: {
-    prediction: "Diabetic" | "Not Diabetic"
+    prediction: "Diabetic" | "Not Diabetic" | 1 | 0 | "1" | "0" // Updated type
     confidence: number
     riskLevel: "Low" | "Medium" | "High"
     timestamp: string
@@ -98,7 +98,7 @@ export default function HistoryPage() {
               <Card className="border-blue-200 shadow-lg">
                 <CardContent className="p-6 text-center">
                   <div className="text-3xl font-bold text-blue-900 mb-2">
-                    {history.filter((h) => h.result.prediction === "Not Diabetic").length}
+                    {history.filter((h) => h.result.prediction === "Not Diabetic" || h.result.prediction === 0 || h.result.prediction === "0").length}
                   </div>
                   <div className="text-blue-700">Low Risk Results</div>
                 </CardContent>
@@ -106,7 +106,7 @@ export default function HistoryPage() {
               <Card className="border-blue-200 shadow-lg">
                 <CardContent className="p-6 text-center">
                   <div className="text-3xl font-bold text-blue-900 mb-2">
-                    {history.filter((h) => h.result.prediction === "Diabetic").length}
+                    {history.filter((h) => h.result.prediction === "Diabetic" || h.result.prediction === 1 || h.result.prediction === "1").length}
                   </div>
                   <div className="text-blue-700">High Risk Results</div>
                 </CardContent>
