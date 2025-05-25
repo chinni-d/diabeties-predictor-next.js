@@ -107,7 +107,7 @@ export default function PredictPage() {
                 <Brain className="w-12 h-12 text-blue-600" />
                 <div className="absolute inset-0 w-12 h-12 bg-blue-600 rounded-full blur-lg opacity-20 animate-pulse" />
               </div>
-              <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+              <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
                 AI Health Assessment
               </h1>
             </div>
@@ -324,8 +324,8 @@ export default function PredictPage() {
                       </>
                     ) : (
                       <>
-                        <Brain className="w-6 h-6 mr-3" />
-                        Get AI-Powered Risk Assessment
+                    
+                        Predict
                       </>
                     )}
                   </Button>
