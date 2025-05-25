@@ -12,7 +12,7 @@ export default function AboutPage() {
             <Heart className="w-10 h-10 text-blue-600" />
             <h1 className="text-4xl font-bold text-blue-900">About DiabetesAI</h1>
           </div>
-          <p className="text-xl text-blue-700 max-w-3xl mx-auto">
+          <p className="text-base text-blue-700 max-w-3xl mx-auto">
             Empowering individuals with AI-driven diabetes risk assessment and personalized health insights for better
             preventive care.
           </p>
@@ -27,7 +27,7 @@ export default function AboutPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="p-8">
-            <p className="text-blue-700 text-lg leading-relaxed mb-6">
+            <p className="text-blue-700 text-base leading-relaxed mb-6">
               DiabetesAI is dedicated to making diabetes risk assessment accessible, accurate, and actionable for
               everyone. We believe that early detection and prevention are key to reducing the global burden of diabetes
               and improving quality of life for millions of people worldwide.
@@ -118,48 +118,46 @@ export default function AboutPage() {
             <div className="flex flex-col md:flex-row items-center gap-8">
               {/* Developer Photo */}
               <div className="flex-shrink-0">
-                <div className="w-32 h-32 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center">
-                  <Users className="w-16 h-16 text-white" />
-                </div>
+                <img
+                  src="/img1.png" // Update this line
+                  alt="Manikanta Darapureddy"
+                  className="w-32 h-32 rounded-full border-4 border-blue-200 shadow-md object-cover"
+                />
               </div>
 
               {/* Developer Info */}
               <div className="flex-1 text-center md:text-left">
-                <h3 className="text-2xl font-bold text-blue-900 mb-2">Dr. Sarah Johnson</h3>
+                <h3 className="text-2xl font-bold text-blue-900 mb-2">Manikanta Darapureddy </h3>
                 <div className="flex flex-wrap gap-2 justify-center md:justify-start mb-4">
                   <Badge variant="secondary">AI/ML Engineer</Badge>
                   <Badge variant="secondary">Healthcare Technology</Badge>
                   <Badge variant="secondary">Data Science</Badge>
                 </div>
                 <p className="text-blue-700 leading-relaxed mb-4">
-                  Dr. Johnson is a passionate healthcare technology specialist with over 8 years of experience in
-                  developing AI-powered medical applications. She holds a Ph.D. in Computer Science with a focus on
-                  machine learning in healthcare, and has published numerous research papers on predictive modeling for
-                  chronic diseases.
+                 Hi! I'm Manikanta Darapureddy, the developer behind DiabetesAI. I'm passionate about creating intelligent applications that are useful, user-friendly, and impactful.
                 </p>
                 <p className="text-blue-700 leading-relaxed mb-6">
-                  Her mission is to democratize access to advanced healthcare insights and empower individuals to take
-                  control of their health through technology.
+                  With experience in web development, AI and machine learning, I enjoy building smart systems that make life easier. This project reflects my commitment to combining cutting-edge tech with seamless design.
                 </p>
 
                 {/* Contact Links */}
                 <div className="flex gap-4 justify-center md:justify-start">
                   <a
-                    href="mailto:sarah.johnson@diabetesai.com"
+                    href="mailto:darapureddymanikanta8@gmail.com"
                     className="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors"
                   >
                     <Mail className="w-5 h-5" />
                     <span>Contact</span>
                   </a>
                   <a
-                    href="https://github.com/sarahjohnson"
+                    href="https://github.com/chinni-d"
                     className="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors"
                   >
                     <Github className="w-5 h-5" />
                     <span>GitHub</span>
                   </a>
                   <a
-                    href="https://linkedin.com/in/sarahjohnson"
+                    href="https://www.linkedin.com/in/manikanta-darapureddy-6a1125314/"
                     className="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors"
                   >
                     <Linkedin className="w-5 h-5" />
