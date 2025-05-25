@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Download, Heart, Activity, AlertCircle, CheckCircle2, Loader2, ArrowLeft } from "lucide-react"
+
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable' // Changed import
 
@@ -22,7 +23,7 @@ interface PredictionData {
     age: string
   }
   result: {
-    prediction: "Diabetic" | "Not Diabetic"
+    prediction: "Diabetic" | "Not Diabetic" | 1 | 0 | "1" | "0" // Updated to include number and string versions of 1 and 0
     confidence: number
     riskLevel: "Low" | "Medium" | "High"
     timestamp: string
@@ -135,8 +136,11 @@ export default function ResultPage() {
         ["Diabetes Pedigree Function", predictionData.formData.diabetesPedigreeFunction],
       ];
 
-      const predictionResultText = predictionData.result.prediction;
-      const predictionColor = predictionResultText === "Diabetic" ? [255, 0, 0] as [number, number, number] : [0, 128, 0] as [number, number, number]; // Red for Diabetic, Green for Not Diabetic
+      // Check if the prediction is 1 (Diabetic) or something else (Not Diabetic)
+      const isDiabetic = predictionData.result.prediction === 1 || predictionData.result.prediction === "1"; // Accommodate both number and string '1'
+
+      const predictionResultText = isDiabetic ? "You are Diabetic" : "You are Not Diabetic";
+      const predictionColor = isDiabetic ? [255, 0, 0] as [number, number, number] : [0, 128, 0] as [number, number, number]; // Red for Diabetic, Green for Not Diabetic
 
       const predictionResults = [
         [{ content: "Result", styles: { textColor: [0,0,0] as [number, number, number] } }, { content: predictionResultText, styles: { textColor: predictionColor } }],

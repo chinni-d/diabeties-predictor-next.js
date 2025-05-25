@@ -51,7 +51,6 @@ export default function HistoryPage() {
   const viewDetails = (entry: PredictionHistory) => {
     // Store the selected entry as the latest prediction for viewing
     localStorage.setItem("latestPrediction", JSON.stringify(entry))
-    localStorage.setItem("fromHistory", "true")
     window.location.href = "/result"
   }
 
@@ -99,7 +98,7 @@ export default function HistoryPage() {
               <Card className="border-blue-200 shadow-lg">
                 <CardContent className="p-6 text-center">
                   <div className="text-3xl font-bold text-blue-900 mb-2">
-                    {history.filter((h) => h.result.riskLevel === "Low").length}
+                    {history.filter((h) => h.result.prediction === "Not Diabetic").length}
                   </div>
                   <div className="text-blue-700">Low Risk Results</div>
                 </CardContent>
@@ -107,7 +106,7 @@ export default function HistoryPage() {
               <Card className="border-blue-200 shadow-lg">
                 <CardContent className="p-6 text-center">
                   <div className="text-3xl font-bold text-blue-900 mb-2">
-                    {history.filter((h) => h.result.riskLevel === "High").length}
+                    {history.filter((h) => h.result.prediction === "Diabetic").length}
                   </div>
                   <div className="text-blue-700">High Risk Results</div>
                 </CardContent>
@@ -131,7 +130,7 @@ export default function HistoryPage() {
               {history.map((entry, index) => (
                 <Card key={index} className="border-blue-200 shadow-lg hover:shadow-xl transition-shadow">
                   <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
                       <div className="flex items-center gap-3">
                         <Calendar className="w-5 h-5 text-blue-600" />
                         <div>
