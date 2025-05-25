@@ -1,30 +1,32 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Progress } from "@/components/ui/progress"
-import { Activity, Loader2, AlertCircle, Shield, Heart, Brain } from "lucide-react"
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Progress } from "@/components/ui/progress";
+import { Activity, Loader2, AlertCircle, Shield, Heart, Brain, LogIn } from "lucide-react"; // Added LogIn
+import { useUser, SignInButton, SignIn } from "@clerk/nextjs"; // Import Clerk hooks and SignIn component
 
 interface FormData {
-  pregnancies: string
-  glucose: string
-  bloodPressure: string
-  skinThickness: string
-  insulin: string
-  bmi: string
-  diabetesPedigreeFunction: string
-  age: string
+  pregnancies: string;
+  glucose: string;
+  bloodPressure: string;
+  skinThickness: string;
+  insulin: string;
+  bmi: string;
+  diabetesPedigreeFunction: string;
+  age: string;
 }
 
 export default function PredictPage() {
-  const router = useRouter()
+  const { isSignedIn, isLoaded } = useUser(); // Get user status
+  const router = useRouter();
   const [formData, setFormData] = useState<FormData>({
     pregnancies: "",
     glucose: "",
@@ -34,63 +36,89 @@ export default function PredictPage() {
     bmi: "",
     diabetesPedigreeFunction: "",
     age: "",
-  })
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState("")
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleInputChange = (field: keyof FormData, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-    setError("")
-  }
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    setError("");
+  };
 
- const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setIsLoading(true);
-  setError("");
-
-  try {
-    const response = await fetch("https://predictapi.dmanikanta.site/predict", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
-
-    if (!response.ok) {
-      throw new Error("Server responded with an error.");
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isSignedIn) {
+      setError("Please sign in to submit the prediction.");
+      // Or trigger modal:
+      // router.push('/sign-in'); // if you want to redirect to a dedicated sign-in page
+      return;
     }
+    setIsLoading(true);
+    setError("");
 
-    const data = await response.json(); // Assuming backend returns prediction, confidence, riskLevel
+    try {
+      const response = await fetch("https://predictapi.dmanikanta.site/predict", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-    const predictionData = {
-      formData,
-      result: {
-        prediction: data.prediction,
-        confidence: data.confidence,
-        riskLevel: data.riskLevel,
-        timestamp: new Date().toISOString(),
-      },
-    };
+      if (!response.ok) {
+        throw new Error("Server responded with an error.");
+      }
 
-    localStorage.setItem("latestPrediction", JSON.stringify(predictionData));
+      const data = await response.json();
 
-    const history = JSON.parse(localStorage.getItem("predictionHistory") || "[]");
-    history.unshift(predictionData);
-    localStorage.setItem("predictionHistory", JSON.stringify(history.slice(0, 10)));
+      const predictionData = {
+        formData,
+        result: {
+          prediction: data.prediction,
+          confidence: data.confidence,
+          riskLevel: data.riskLevel,
+          timestamp: new Date().toISOString(),
+        },
+      };
 
-    router.push("/result");
-  } catch (error) {
-    console.error("Prediction failed:", error);
-    setError("Failed to process prediction. Please try again.");
-  } finally {
-    setIsLoading(false);
+      localStorage.setItem("latestPrediction", JSON.stringify(predictionData));
+
+      const history = JSON.parse(localStorage.getItem("predictionHistory") || "[]");
+      history.unshift(predictionData);
+      localStorage.setItem("predictionHistory", JSON.stringify(history.slice(0, 10)));
+
+      router.push("/result");
+    } catch (error) {
+      console.error("Prediction failed:", error);
+      setError("Failed to process prediction. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const isFormValid = Object.values(formData).every((value) => value.trim() !== "");
+  const completionPercentage = (Object.values(formData).filter((value) => value.trim() !== "").length / 8) * 100;
+
+  if (!isLoaded) {
+    // Still loading Clerk user data, show a loader
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Loader2 className="w-12 h-12 animate-spin text-blue-600" />
+      </div>
+    );
   }
-};
 
-  const isFormValid = Object.values(formData).every((value) => value.trim() !== "")
-  const completionPercentage = (Object.values(formData).filter((value) => value.trim() !== "").length / 8) * 100
+  if (!isSignedIn) {
+    // User is not signed in, show only the Clerk SignIn component, centered
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-12rem)] py-12">
+        {/* The 12rem in min-h accounts for typical header/footer height, adjust if needed */}
+        <SignIn routing="hash" signUpUrl="/sign-up" />
+      </div>
+    );
+  }
 
+  // User is signed in, render the form
   return (
     <div className="relative overflow-hidden">
       {/* Background Elements */}
@@ -345,5 +373,5 @@ export default function PredictPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
