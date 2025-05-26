@@ -1,32 +1,30 @@
-"use client";
+"use client"
 
-import type React from "react";
+import type React from "react"
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Progress } from "@/components/ui/progress";
-import { Activity, Loader2, AlertCircle, Shield, Heart, Brain, LogIn } from "lucide-react"; // Added LogIn
-import { useUser, SignInButton, SignIn } from "@clerk/nextjs"; // Import Clerk hooks and SignIn component
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Progress } from "@/components/ui/progress"
+import { Activity, Loader2, AlertCircle, Shield, Heart, Brain } from "lucide-react"
 
 interface FormData {
-  pregnancies: string;
-  glucose: string;
-  bloodPressure: string;
-  skinThickness: string;
-  insulin: string;
-  bmi: string;
-  diabetesPedigreeFunction: string;
-  age: string;
+  pregnancies: string
+  glucose: string
+  bloodPressure: string
+  skinThickness: string
+  insulin: string
+  bmi: string
+  diabetesPedigreeFunction: string
+  age: string
 }
 
 export default function PredictPage() {
-  const { isSignedIn, isLoaded } = useUser(); // Get user status
-  const router = useRouter();
+  const router = useRouter()
   const [formData, setFormData] = useState<FormData>({
     pregnancies: "",
     glucose: "",
@@ -36,89 +34,63 @@ export default function PredictPage() {
     bmi: "",
     diabetesPedigreeFunction: "",
     age: "",
-  });
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  })
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
 
   const handleInputChange = (field: keyof FormData, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-    setError("");
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!isSignedIn) {
-      setError("Please sign in to submit the prediction.");
-      // Or trigger modal:
-      // router.push('/sign-in'); // if you want to redirect to a dedicated sign-in page
-      return;
-    }
-    setIsLoading(true);
-    setError("");
-
-    try {
-      const response = await fetch("https://predictapi.dmanikanta.site/predict", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        throw new Error("Server responded with an error.");
-      }
-
-      const data = await response.json();
-
-      const predictionData = {
-        formData,
-        result: {
-          prediction: data.prediction,
-          confidence: data.confidence,
-          riskLevel: data.riskLevel,
-          timestamp: new Date().toISOString(),
-        },
-      };
-
-      localStorage.setItem("latestPrediction", JSON.stringify(predictionData));
-
-      const history = JSON.parse(localStorage.getItem("predictionHistory") || "[]");
-      history.unshift(predictionData);
-      localStorage.setItem("predictionHistory", JSON.stringify(history.slice(0, 10)));
-
-      router.push("/result");
-    } catch (error) {
-      console.error("Prediction failed:", error);
-      setError("Failed to process prediction. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const isFormValid = Object.values(formData).every((value) => value.trim() !== "");
-  const completionPercentage = (Object.values(formData).filter((value) => value.trim() !== "").length / 8) * 100;
-
-  if (!isLoaded) {
-    // Still loading Clerk user data, show a loader
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <Loader2 className="w-12 h-12 animate-spin text-blue-600" />
-      </div>
-    );
+    setFormData((prev) => ({ ...prev, [field]: value }))
+    setError("")
   }
 
-  if (!isSignedIn) {
-    // User is not signed in, show only the Clerk SignIn component, centered
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-12rem)] py-12">
-        {/* The 12rem in min-h accounts for typical header/footer height, adjust if needed */}
-        <SignIn routing="hash" signUpUrl="/sign-up" />
-      </div>
-    );
-  }
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setIsLoading(true);
+  setError("");
 
-  // User is signed in, render the form
+  try {
+    const response = await fetch("https://predictapi.dmanikanta.site/predict", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (!response.ok) {
+      throw new Error("Server responded with an error.");
+    }
+
+    const data = await response.json(); // Assuming backend returns prediction, confidence, riskLevel
+
+    const predictionData = {
+      formData,
+      result: {
+        prediction: data.prediction,
+        confidence: data.confidence,
+        riskLevel: data.riskLevel,
+        timestamp: new Date().toISOString(),
+      },
+    };
+
+    localStorage.setItem("latestPrediction", JSON.stringify(predictionData));
+
+    const history = JSON.parse(localStorage.getItem("predictionHistory") || "[]");
+    history.unshift(predictionData);
+    localStorage.setItem("predictionHistory", JSON.stringify(history.slice(0, 50)));
+
+    router.push("/result");
+  } catch (error) {
+    console.error("Prediction failed:", error);
+    setError("Failed to process prediction. Please try again.");
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+  const isFormValid = Object.values(formData).every((value) => value.trim() !== "")
+  const completionPercentage = (Object.values(formData).filter((value) => value.trim() !== "").length / 8) * 100
+
   return (
     <div className="relative overflow-hidden">
       {/* Background Elements */}
@@ -135,11 +107,11 @@ export default function PredictPage() {
                 <Brain className="w-12 h-12 text-blue-600" />
                 <div className="absolute inset-0 w-12 h-12 bg-blue-600 rounded-full blur-lg opacity-20 animate-pulse" />
               </div>
-              <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+              <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
                 AI Health Assessment
               </h1>
             </div>
-            <p className="text-base text-slate-600 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
               Provide accurate health information for the most reliable AI-powered diabetes risk prediction. All data is
               encrypted and processed securely.
             </p>
@@ -154,6 +126,21 @@ export default function PredictPage() {
             </div>
           </div>
 
+           {/* Stats Section */}
+          <div className="flex flex-wrap justify-center gap-6 mb-12">
+            <div className="flex items-center gap-2 bg-white rounded-full px-4 py-2 shadow-md">
+              <Shield className="w-5 h-5 text-green-600" />
+              <span className="text-sm font-medium text-slate-700">HIPAA Compliant</span>
+            </div>
+            <div className="flex items-center gap-2 bg-white rounded-full px-4 py-2 shadow-md">
+              <Heart className="w-5 h-5 text-red-500" />
+              <span className="text-sm font-medium text-slate-700">Medically Validated</span>
+            </div>
+            <div className="flex items-center gap-2 bg-white rounded-full px-4 py-2 shadow-md">
+              <Brain className="w-5 h-5 text-blue-600" />
+              <span className="text-sm font-medium text-slate-700">AI-Powered</span>
+            </div>
+          </div>
 
           {/* Form Card */}
           <Card className="border-0 shadow-2xl bg-white/80 backdrop-blur-sm">
@@ -352,8 +339,8 @@ export default function PredictPage() {
                       </>
                     ) : (
                       <>
-                    
-                        Predict
+                        <Brain className="w-6 h-6 mr-3" />
+                        Get AI-Powered Risk Assessment
                       </>
                     )}
                   </Button>
@@ -373,5 +360,5 @@ export default function PredictPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }
