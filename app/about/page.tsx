@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Heart, Brain, Shield, User, Award, Mail, Github, Linkedin } from "lucide-react"
+import { Heart, Brain, Shield, User, Award, Mail, Github, Globe } from "lucide-react"
 
 export default function AboutPage() {
   return (
@@ -157,11 +157,11 @@ export default function AboutPage() {
                     <span>GitHub</span>
                   </a>
                   <a
-                    href="https://www.linkedin.com/in/manikanta-darapureddy-6a1125314/"
+                    href="https://dmanikanta.site"
                     className="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors"
                   >
-                    <Linkedin className="w-5 h-5" />
-                    <span>LinkedIn</span>
+                    <Globe className="w-5 h-5" />
+                    <span>Portfolio</span>
                   </a>
                 </div>
               </div>
