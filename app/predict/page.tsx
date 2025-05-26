@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Progress } from "@/components/ui/progress"
 import { Activity, Loader2, AlertCircle, Shield, Heart, Brain } from "lucide-react"
+import { SignedIn, SignedOut, SignIn } from "@clerk/nextjs"
 
 interface FormData {
   pregnancies: string
@@ -92,7 +93,14 @@ export default function PredictPage() {
   const completionPercentage = (Object.values(formData).filter((value) => value.trim() !== "").length / 8) * 100
 
   return (
-    <div className="relative overflow-hidden">
+    <>
+      <SignedOut>
+        <div className="flex items-center justify-center min-h-[70vh]">
+          <SignIn routing="virtual" appearance={{ elements: { card: "shadow-none" } }} />
+        </div>
+      </SignedOut>
+      <SignedIn>
+        <div className="relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-blue-50" />
       <div className="absolute top-0 right-0 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob" />
@@ -359,6 +367,8 @@ export default function PredictPage() {
           </Card>
         </div>
       </div>
-    </div>
+        </div>
+      </SignedIn>
+    </>
   )
 }
